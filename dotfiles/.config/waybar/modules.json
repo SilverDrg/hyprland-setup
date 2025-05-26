@@ -14,14 +14,25 @@
         "on-click": "activate",
         "active-only": false,
         "all-outputs": true,
-        "format": "{}",
+        "format": "{icon}",
+        "format-active": "[{name}]",
         "format-icons": {
-			"urgent": "",
-			"active": "",
-			"default": ""
+            "1": "I",
+            "2": "II",
+            "3": "III",
+            "4": "IV",
+            "5": "V",
+            "6": "VI",
+            "7": "VII",
+            "8": "VIII",
+            "9": "IX",
+            "10": "X",
         },
         "persistent-workspaces": {
-             "*": 5
+             "1": [],
+             "2": [],
+             "3": [],
+             "4": [],
         }       
     },
 
@@ -35,47 +46,6 @@
             "(.*) Microsoft Teams": "$1"
         },
         "separate-outputs": true
-    },
-
-    // Rofi Application Launcher
-    "custom/appmenu": {
-        "format": "Apps",
-        "tooltip-format": "Left: Open the application launcher\nRight: Show all keybindings",
-        "on-click": "rofi -show drun -replace",
-        "on-click-right": "~/.config/ml4w/scripts/keybindings.sh",
-        "tooltip": false
-    },
-    
-    // Power Menu
-    "custom/exit": {
-        "format": "",
-        "tooltip-format": "Powermenu",
-        "on-click": "wlogout -b 4",
-        "tooltip": false
-    },
-
-    // Keyboard State
-    "keyboard-state": {
-        "numlock": true,
-        "capslock": true,
-        "format": "{name} {icon}",
-        "format-icons": {
-            "locked": "",
-            "unlocked": ""
-        }
-    },
-
-    // System tray
-    "tray": {
-        // "icon-size": 21,
-        "spacing": 10
-    },
-
-    // Clock
-    "clock": {
-        // "timezone": "America/New_York",
-        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "format-alt": "{:%Y-%m-%d}"
     },
 
     // System
@@ -102,7 +72,7 @@
         "format": "D {percentage_used}% ",
         "path": "/",
         "on-click": "alacritty -e htop"
-    }, 
+    },
 
     "hyprland/language": {
         "format": "/ K {short}"
@@ -115,28 +85,61 @@
             "transition-duration": 300,
             "children-class": "not-memory",
             "transition-left-to-right": false
-        },        
+        },
         "modules": [
             "custom/system",
             "disk",
             "cpu",
-            "memory",
-            "hyprland/language"
+            "memory"
         ]
     },
-    
-   // Network
-    "network": {
-        "format": "{ifname}",
-        "format-wifi": "   {signalStrength}%",
-        "format-ethernet": "  {ipaddr}",
-        "format-disconnected": "Not connected", //An empty format will hide the module.
-        "tooltip-format": " {ifname} via {gwaddri}",
-        "tooltip-format-wifi": "   {essid} ({signalStrength}%)",
-        "tooltip-format-ethernet": "  {ifname} ({ipaddr}/{cidr})",
-        "tooltip-format-disconnected": "Disconnected",
-        "max-length": 50,
-        "on-click": "alacritty -e nmtui"
+
+    // Keyboard State
+    "keyboard-state": {
+        "numlock": true,
+        "capslock": true,
+        "format": "{name} {icon}",
+        "format-icons": {
+            "locked": "",
+            "unlocked": ""
+        }
+    },
+
+    // System tray
+    "tray": {
+        // "icon-size": 21,
+        "spacing": 10
+    },
+
+    // Idle Inhibator
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "tooltip": true,
+        "format-icons":{
+            "activated": "",
+            "deactivated": ""
+        },
+        "on-click-right": "hyprlock"
+    },
+
+    // Rofi Application Launcher
+    "custom/appmenu": {
+        "format": "Apps",
+        "tooltip-format": "Left: Open the application launcher\nRight: Show all keybindings",
+        "on-click": "rofi -show drun -replace",
+        "on-click-right": "~/.config/ml4w/scripts/keybindings.sh",
+        "tooltip": false
+    },
+
+    // Clock
+    "clock": {
+        "interval": 1,
+        "format": "{:%H:%M}  ",
+        // "format": "{:%H:%M:%OS}  ",
+        "format-alt": "{:%A, %d.%m.%Y (%R)} ",
+        "timezone": "Europe/Ljubljana",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "tooltip": true
     },
 
     // Battery
@@ -152,7 +155,8 @@
         "format-alt": "{icon}  {time}",
         // "format-good": "", // An empty format will hide the module
         // "format-full": "",
-        "format-icons": [" ", " ", " ", " ", " "]
+        "format-icons": [" ", " ", " ", " ", " "],
+        "tooltip": false
     },
 
     // Pulseaudio
@@ -178,28 +182,69 @@
 
     // Bluetooth
     "bluetooth": {
-        "format-disabled": "",
-        "format-off": "",
-        "interval": 30,
-        "on-click": "blueman-manager",
-        "format-no-controller": ""
+        "format-on": "󰂯",
+        "format-off": "BT-off",
+        "format-disabled": "󰂲",
+        "format-connected-battery": "󰂯 {device_battery_percentage}%",
+        "format-alt": "{device_alias} 󰂯",
+        "tooltip-format": "{controller_alias}\t{controller_address}\n\n{num_connections} connected",
+        "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}",
+        "tooltip-format-enumerate-connected": "{device_alias}\n{device_address}",
+        "tooltip-format-enumerate-connected-battery": "{device_alias}\n{device_address}\n{device_battery_percentage}%",
+        "on-click-right": "blueman-manager",
+        "tooltip": true
+    },
+    
+   // Network
+    "network": {
+        "format": "{ifname}",
+        "format-wifi": "   {signalStrength}%",
+        "format-ethernet": "  {ipaddr}",
+        "format-disconnected": "Not connected", //An empty format will hide the module.
+        "tooltip-format": " {ifname} via {gwaddri}",
+        "tooltip-format-wifi": "   {essid} ({signalStrength}%)",
+        "tooltip-format-ethernet": "  {ifname} ({ipaddr}/{cidr})",
+        "tooltip-format-disconnected": "Disconnected",
+        "max-length": 50,
+        "on-click": "alacritty -e nmtui",
+        "tooltip": true
+    },
+
+    // VPN
+    "custom/vpn": {
+        // on-click: toggles VPN connection on/off,
+        // click-right: opens rofi menu for VPN control,
+        // click-middle: copies IP address to clipboard,
+        "exec": "if hash mullvad &>/dev/null; then ~/.config/waybar/scripts/vpn_module status mullvad; fi",
+        "on-click": "~/.config/waybar/scripts/vpn_module toggle",
+        "on-click-right": "~/.config/waybar/scripts/vpn_module menu",
+        "on-click-middle": "~/.config/waybar/scripts/vpn_module ip-clip",
+        "interval": 1,
+        "format": "{text}",
+        "tooltip": false
     },
 
     // Other
-    "user": {
-        "format": "{user}",
+    "custom/user": {
+        "format": "{}",
         "interval": 60,
-        "icon": false,
+        "exec": "echo $(hostname)@$(whoami)",
+        "tooltip": false
     },
 
-    // Idle Inhibator
-    "idle_inhibitor": {
-        "format": "{icon}",
-        "tooltip": true,
-        "format-icons":{
-            "activated": "",
-            "deactivated": ""
-        },
-        "on-click-right": "hyprlock"        
-    }
+    // Power Menu
+    "custom/exit": {
+        "format": "",
+        "tooltip-format": "Powermenu",
+        "on-click": "wlogout -b 4",
+        "tooltip": false
+    },
+
+    // Lock button
+    "custom/lock": {
+        "format": "󰌾 ",
+        "on-click": "hyprlock",
+        "tooltip": "false",
+    },
+
 }
